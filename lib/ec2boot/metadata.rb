@@ -1,15 +1,26 @@
+require 'pp'
+
 module EC2Boot
     class MetaData<Data
+        include Log
+
         attr_reader :meta_data
 
-        def initialize(config)
+        def initialize(config, metadata=nil)
             @meta_data = nil
 
             super(config)
 
             FileUtils.mkdir_p(@config.cache_dir + "/meta-data")
-
-            fetch
+            
+            if !metadata
+                log "Will fetch metadata"
+                fetch
+            else
+                log "Override metadata with supplied: #{PP.pp(metadata, dump="")}"
+                @meta_data = metadata
+                @fetched = true
+            end
         end
 
         def flat_data

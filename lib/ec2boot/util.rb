@@ -1,5 +1,7 @@
 module EC2Boot
     class Util
+        include Log
+
         # Fetches a url, it will retry 5 times if it still
         # failed it will return ""
         #
@@ -10,12 +12,14 @@ module EC2Boot
         # raises URLNotFound for 404s and URLFetchFailed for
         # other non 200 status codes
         def self.get_url(url, file=nil)
+            log("get_url(#{url}, #{file})")
+
             uri = URI.parse(url)
             http = Net::HTTP.new(uri.host, uri.port)
             http.use_ssl = (uri.scheme == 'https')
-
             retries = 5
 
+            log "parsed to: #{uri}"
             begin
                 if file
                     dest_file = File.open(file, "w")
@@ -55,12 +59,6 @@ module EC2Boot
             end
         end
 
-        # Logs to stdout and syslog
-        def self.log(msg)
-            puts "#{Time.now}> #{msg}"
-            system("logger #{msg}")
-        end
-
         # updates the motd, updates all @@foo@@ variables
         # with data from the facts
         def self.update_motd(ud, md, config)
@@ -69,11 +67,9 @@ module EC2Boot
             File.open(config.motd_file, "w") do |motd|
                 templ.each do |line|
                     if md.fetched?
-                        line.gsub!(/@@ami_id@@/, md.flat_data["ami_id"])
-                        line.gsub!(/@@instance_type@@/, md.flat_data["instance_type"])
-                        line.gsub!(/@@placement_availability_zone@@/, md.flat_data["placement_availability_zone"])
-                        line.gsub!(/@@hostname@@/, md.flat_data["hostname"])
-                        line.gsub!(/@@public_hostname@@/, md.flat_data["public_hostname"])
+                        [ "ami_id", "instance_type" , "placement_availability_zone", "hostname" , "public_hostname" ].each do |key|
+                            line.gsub!(/@@#{key}@@/, md.flat_data["#{key}"]) if md.flat_data.has_key?("#{key}")
+                        end
                     end
 
                     motd.write line
@@ -101,6 +97,8 @@ module EC2Boot
                     data.keys.sort.each do |k|
                         facts.puts("ec2_#{k}=#{data[k]}")
                     end
+                else
+                    log "data not fetched"
                 end
 
                 if data.include?("placement_availability_zone")

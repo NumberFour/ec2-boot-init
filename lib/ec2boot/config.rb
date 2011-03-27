@@ -13,7 +13,6 @@ module EC2Boot
 
             @actions = Actions.new(self)
 
-
             FileUtils.mkdir_p(@cache_dir)
         end
     end

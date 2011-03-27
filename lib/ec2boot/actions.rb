@@ -1,5 +1,7 @@
 module EC2Boot
     class Actions
+        include Log
+
         def initialize(config)
             @actions_dir = config.actions_dir
 
@@ -7,12 +9,16 @@ module EC2Boot
         end
 
         def load_actions
+            log "load_actions"
             Dir.entries(@actions_dir).grep(/\.rb$/).each do |cmd|
-                load [@actions_dir, cmd].join("/")
+                item = [@actions_dir, cmd].join("/")
+                log "about to load: #{item}"
+                load item
             end
         end
 
         def run_actions(ud, md, config)
+            log "run_actions"
             if ud.user_data.is_a?(Hash)
                 if ud.user_data.include?(:actions)
                     ud.user_data[:actions].each do |action|
@@ -22,23 +28,27 @@ module EC2Boot
 
                             if respond_to?(meth)
                                 begin
-                                    Util.log("Running action #{type}")
+                                    log("Running action '#{type}'")
 
                                     send(meth, action, ud, md, config)
                                 rescue Exception => e
-                                    Util.log("Failed to run action #{type}: #{e.class}: #{e}")
+                                    log("Failed to run action #{type}: #{e.class}: #{e}")
                                 end
                             else
+                                log "no method: #{meth}"
                                 # no such method
                             end
                         else
+                            log ":action '#{action}' contains no type"
                             # no type
                         end
                     end
                 else
+                    log "No :actions in user-data"
                     # no :actions
                 end
             else
+                log "user-data not a hash"
                 # not a hash
             end
         end

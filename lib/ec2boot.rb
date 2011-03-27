@@ -7,6 +7,8 @@ module EC2Boot
     class URLFetchFailed<RuntimeError;end
     class URLNotFound<RuntimeError;end
 
+    autoload :Log, "ec2boot/log"
+    autoload :LocalConfig, "ec2boot/localconfig"
     autoload :Config, "ec2boot/config"
     autoload :Data, "ec2boot/data"
     autoload :UserData, "ec2boot/userdata"
