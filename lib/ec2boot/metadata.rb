@@ -8,6 +8,7 @@ module EC2Boot
 
         def initialize(config, metadata=nil)
             @meta_data = nil
+            @flat_data_cache = nil
 
             super(config)
 
@@ -24,39 +25,14 @@ module EC2Boot
         end
 
         def flat_data
-            flatten(@meta_data)
+            @flat_data_cache = flatten(@meta_data) if ! @flat_data_cache
+            @flat_data_cache
         end
 
         private
         def fetch
             @meta_data = get_tree("/")
             @fetched = true
-        end
-
-        # Turns the multi dimensional ec2 data into a boring flat version
-        def flatten(data, prefix = "")
-            flat = {}
-
-            data.each_pair do |k,v|
-                key = prefix + k.gsub("-", "_")
-
-                if v.is_a?(String)
-                    v.chomp!
-
-                    # if it's got multiple lines split them out in _x
-                    if v.match("\n")
-                        v.split("\n").each_with_index do |val, idx|
-                            flat[key + "_#{idx}"] = val
-                        end
-                    else
-                        flat[key] = v
-                    end
-                elsif v.is_a?(Hash)
-                    flat.merge!(flatten(v, "#{key}_"))
-                end
-            end
-
-            flat
         end
 
         # gets an entire tree of ec2 data

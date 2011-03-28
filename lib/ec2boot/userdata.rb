@@ -6,9 +6,20 @@ module EC2Boot
 
         def initialize(config)
             @user_data = nil
+            @flat_data_cache = nil
 
             super(config)
             fetch
+        end
+
+        def flat_data
+            if !@flat_data_cache
+                @flat_data_cache = {}
+                @flat_data_cache[:facts] = flatten(@user_data[:facts]) if @user_data.has_key?(:facts)
+
+                log "Flattened user_data: #{PP.pp(@flat_data_cache, dump="")}"
+            end
+            @flat_data_cache
         end
 
         private
