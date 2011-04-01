@@ -19,7 +19,7 @@ module EC2Boot
             http.use_ssl = (uri.scheme == 'https')
             retries = 5
 
-            log "parsed to: #{uri}"
+            #log "parsed to: #{uri}"
             begin
                 if file
                     dest_file = File.open(file, "w")

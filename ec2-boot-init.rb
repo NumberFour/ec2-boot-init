@@ -8,31 +8,11 @@ def log(msg)
     system("logger", "#{msg}")
 end
 
-# "parse" command line
-ARGV.each {|arg| 
-  localmode=true if arg == "local"
-}
+puts "Network mode enabled"
+config = EC2Boot::Config.new
 
-if localmode
-    log "Local mode enabled"
-    config = EC2Boot::LocalConfig.new
-
-    ud = EC2Boot::UserData.new(config)
-    md = EC2Boot::MetaData.new(config, { 
-                                   "ami_id" => "ami-123", 
-                                   "instance_type" => "i-456", 
-                                   "placement_availability_zone" => "zone-abc", 
-                                   "hostname" => "examplehost.exampledomain", 
-                                   "public_hostname" => "dns.aws.com" 
-                               })
-else
-    puts "Network mode enabled"
-    config = EC2Boot::Config.new
-
-    ud = EC2Boot::UserData.new(config)
-    md = EC2Boot::MetaData.new(config)
-end
-
+ud = EC2Boot::UserData.new(config)
+md = EC2Boot::MetaData.new(config)
 
 EC2Boot::Util.write_facts(ud, md, config)
 log "Facts written."
