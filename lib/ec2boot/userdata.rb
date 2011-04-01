@@ -26,19 +26,22 @@ module EC2Boot
         def fetch
             log("Fetching user_data")
 
-            if ENV['EC2BOOTINIT_LOCAL'] != ""
+            if ENV['EC2BOOTINIT_LOCAL'] && ENV['EC2BOOTINIT_LOCAL'] != ""
                 log("Using LOCAL information")
-                @user_data_raw = File.open(@config.cache_dir + "/user-data.raw", "r")
+                @user_data_raw = ""
+                File.open(@config.cache_dir + "/user-data.raw", "r").each_line do |l|
+                    @user_data_raw += l
+                end
             else
                 @user_data_raw = Util.get_url(@config.user_data_url)
+                File.open(@config.cache_dir + "/user-data.raw", "w") do |ud|
+                    ud.puts @user_data_raw
+                end
             end
+
             @user_data = YAML.load(@user_data_raw)
-
-            File.open(@config.cache_dir + "/user-data.raw", "w") do |ud|
-                ud.puts @user_data_raw
-            end
-
             @fetched = true
+
         rescue URLNotFound
             @user_data_raw = ""
             @user_data = []
