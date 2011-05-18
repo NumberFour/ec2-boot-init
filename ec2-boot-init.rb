@@ -8,30 +8,23 @@ def log(msg)
     system("logger", "#{msg}")
 end
 
-localmode=false
 bootmode=true
 debug=false
 
 OptionParser.new do |opts|
-  opts.banner = "Usage: TODO --update"
+    opts.banner = "ec2-boot-init: A script to provision EC2 boot instances."
 
-  opts.on("-u", "--update", "only updates ec2 variables values") do |v|
-    bootmode=false
-  end
-
-  opts.on("-l", "--local-mode", "Runs locally") do |v|
-    localmode=true
-  end
-
-  opts.on("-d", "--debug", "Run in debug mode") do |v|
-    debug=true
-  end
-
+    opts.on("-u", "--update", "only updates ec2 variables values") do |v|
+        bootmode=false
+    end
+    
+    opts.on("-d", "--debug", "Run in debug mode") do |v|
+        debug=true
+    end
 end.parse!
 
 if debug
    log "bootmode:#{bootmode}"
-   log "localmode:#{localmode}"
    log "debug:#{debug}"
 end
 
