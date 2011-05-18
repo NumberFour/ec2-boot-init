@@ -67,7 +67,7 @@ module EC2Boot
             File.open(config.motd_file, "w") do |motd|
                 templ.each do |line|
                     if md.fetched?
-                        [ "ami_id", "instance_type" , "placement_availability_zone", "hostname" , "public_hostname" ].each do |key|
+                        [ "ami_id", "instance_type" , "placement_availability_zone", "hostname" , "public_hostname", "instance_id" ].each do |key|
                             line.gsub!(/@@#{key}@@/, md.flat_data["#{key}"]) if md.flat_data.has_key?("#{key}")
                         end
                     end

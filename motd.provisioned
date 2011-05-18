@@ -6,6 +6,7 @@
       Successfully provisioned Amazon instance.    
 
                 ami: @@ami_id@@
+        instance-id: @@instance_id@@
                type: @@instance_type@@
                zone: @@placement_availability_zone@@
            hostname: @@hostname@@
