@@ -42,17 +42,6 @@ rm -rf %{buildroot}
 
 %post
 cp /etc/ec2-boot-init/motd.unprovisioned /etc/motd
-/sbin/chkconfig --add ec2-boot-init || :
-
-%postun
-if [ "$1" -ge 1 ]; then
-	/sbin/service ec2-boot-init condrestart &>/dev/null || :
-fi
-
-%preun
-if [ "$1" = 0 ] ; then
-  /sbin/chkconfig --del ec2-boot-init || :
-fi
 
 %files
 %doc COPYING
@@ -62,5 +51,9 @@ fi
 %{ruby_sitelib}/ec2boot
 
 %changelog
+* Wed May 18 2011 Jens Braeuer <jens@numberfour.eu> - %{version}-%{rpm_release}%{?dist}
+- Removed init-script. Added update-mode.
+- Added instance-id to motd.
+
 * Tue Nov 03 2009 R.I.Pienaar <rip@devco.net>
 - First release
