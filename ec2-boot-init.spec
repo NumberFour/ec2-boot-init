@@ -58,7 +58,6 @@ fi
 %doc COPYING
 /usr/sbin/ec2-boot-init
 /etc/ec2-boot-init
-/etc/init.d/ec2-boot-init
 %{ruby_sitelib}/ec2boot.rb
 %{ruby_sitelib}/ec2boot
 
