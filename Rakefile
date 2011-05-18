@@ -9,7 +9,7 @@ PROJ_DOC_TITLE = "EC2 Bootstrap System"
 PROJ_VERSION = "0.0.3"
 PROJ_RELEASE = "1"
 PROJ_NAME = "ec2-boot-init"
-PROJ_RPM_NAMES = [PRO_NAME]
+PROJ_RPM_NAMES = [PROJ_NAME]
 PROJ_FILES = ["#{PROJ_NAME}.spec", "#{PROJ_NAME}.rb", "COPYING", "motd.provisioned", "motd.unprovisioned"]
 PROJ_SUBDIRS = ["lib", "actions"]
 
