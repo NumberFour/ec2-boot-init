@@ -44,11 +44,10 @@ EC2Boot::Util.write_facts(ud, md, config)
 log "Facts written."
 
 if bootmode
-    log "Boot mode enabled" if debug
-    log "boot instance"
+    log "Boot mode enabled." if debug
     config.actions.run_actions(ud, md, config)
     log "Action run."
-
-    EC2Boot::Util.update_motd(ud, md, config)  if ud.fetched? && md.fetched?
-    log "Motd updated."
 end
+
+EC2Boot::Util.update_motd(ud, md, config)  if ud.fetched? && md.fetched?
+log "Motd updated."
