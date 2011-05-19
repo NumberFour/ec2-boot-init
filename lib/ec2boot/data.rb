@@ -35,6 +35,8 @@ module EC2Boot
                 elsif v.is_a?(Hash)
                     #log "Flatten key '#{key}' with hash"
                     flat.merge!(flatten(v, "#{key}_"))
+                elsif v.is_a?(Array)
+                    flat[key] = v.join(",")
                 end
             end
 
