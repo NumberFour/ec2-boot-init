@@ -78,17 +78,18 @@ module EC2Boot
         end
 
         public
-        def copy_to_tmp_file(source)
+        def self.copy_file_to_tmp(source)
             require 'tempfile'
             require 'ftools'
 
+
             tmpfile=Tempfile.new("ruby")
-            File.copy(config.facts_file,tmpfile)
-            return tmpfile
+            File.copy(source,tmpfile.path) if File.file? source
+            return tmpfile.path
         end
 
         public
-        def copy_file(source,target)
+        def self.copy_file(source,target)
             require 'ftools'
 
             File.copy(source,target)
@@ -135,11 +136,11 @@ module EC2Boot
         public
         def self.write_facts(ud, md, config)
             log "Copy facts to tmp file"
-            tmpfile=copy_to_tmp_file(config.facts_file)
+            tmpfile=Util.copy_file_to_tmp(config.facts_file)
             log "Load data from tmp file: #{tmpfile}"
-            update_facts_from_file(tmpfile, ud, md, config)
+            Util.update_facts_from_file(tmpfile, ud, md, config)
             log "Publishes new #{config.facts_file} using content from #{tmpfile}"
-            copy_file(tmpfile,config.facts_file)
+            Util.copy_file(tmpfile,config.facts_file)
             log "Deletes #{tmpfile}"
             File.delete(tmpfile)
             log "Done."
