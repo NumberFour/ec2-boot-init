@@ -77,11 +77,28 @@ module EC2Boot
             end
         end
 
-        # writes out the facts file
-        def self.write_facts(ud, md, config)
-            File.open(config.facts_file, "w") do |facts|
+        public
+        def copy_to_tmp_file(source)
+            require 'tempfile'
+            require 'ftools'
 
+            tmpfile=Tempfile.new("ruby")
+            File.copy(config.facts_file,tmpfile)
+            return tmpfile
+        end
+
+        public
+        def copy_file(source,target)
+            require 'ftools'
+
+            File.copy(source,target)
+        end
+
+        private
+        def self.update_facts_from_file(file,ud, md, config)
+            File.open(file, "w") do |facts|
                 if ud.fetched?
+                    log "update user data"
                     data = ud.flat_data
                     if data.is_a?(Hash)
                         if data.include?(:facts)
@@ -97,6 +114,7 @@ module EC2Boot
                 end
 
                 if md.fetched?
+                    log "update metadata"
                     data = md.flat_data
 
                     data.keys.sort.each do |k|
@@ -107,9 +125,24 @@ module EC2Boot
                 end
 
                 if data.include?("placement_availability_zone")
+                    log "update region data"
                     facts.puts("ec2_placement_region=" + data["placement_availability_zone"].chop)
                 end
             end
+        end
+
+        # writes out the facts file
+        public
+        def self.write_facts(ud, md, config)
+            log "Copy facts to tmp file"
+            tmpfile=copy_to_tmp_file(config.facts_file)
+            log "Load data from tmp file: #{tmpfile}"
+            update_facts_from_file(tmpfile, ud, md, config)
+            log "Publishes new #{config.facts_file} using content from #{tmpfile}"
+            copy_file(tmpfile,config.facts_file)
+            log "Deletes #{tmpfile}"
+            File.delete(tmpfile)
+            log "Done."
         end
     end
 end
