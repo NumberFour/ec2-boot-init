@@ -6,7 +6,7 @@ require 'rake/clean'
 require 'find'
 
 PROJ_DOC_TITLE = "EC2 Bootstrap System"
-PROJ_VERSION = "0.1.0"
+PROJ_VERSION = "0.2.0"
 PROJ_RELEASE = "1"
 PROJ_NAME = "ec2-boot-init"
 PROJ_RPM_NAMES = [PROJ_NAME]
