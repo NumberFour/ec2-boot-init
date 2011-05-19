@@ -51,6 +51,11 @@ cp /etc/ec2-boot-init/motd.unprovisioned /etc/motd
 %{ruby_sitelib}/ec2boot
 
 %changelog
+* Thu May 19 2011
+- makes update mode default and boot mode triggered by the --boot option
+- writes facts to a temporary file to avoid race condition at runtime.
+- fixes broken array support.
+
 * Wed May 18 2011 Jens Braeuer <jens@numberfour.eu> - %{version}-%{rpm_release}%{?dist}
 - Removed init-script. Added update-mode.
 - Added instance-id to motd.
