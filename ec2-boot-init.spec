@@ -51,7 +51,10 @@ cp /etc/ec2-boot-init/motd.unprovisioned /etc/motd
 %{ruby_sitelib}/ec2boot
 
 %changelog
-* Thu May 19 2011
+* Thu May 19 2011 Romain Pelisse <romain.pelisse@numberfour.eu> - %{version}-%{rpm_release}%{?dist}
+- fixes in tmp files handling 
+
+* Thu May 19 2011 Romain Pelisse <romain.pelisse@numberfour.eu> - %{version}-%{rpm_release}%{?dist}
 - makes update mode default and boot mode triggered by the --boot option
 - writes facts to a temporary file to avoid race condition at runtime.
 - fixes broken array support.
