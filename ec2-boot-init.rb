@@ -15,7 +15,7 @@ OptionParser.new do |opts|
     opts.banner = "ec2-boot-init: A script to provision EC2 boot instances."
 
     opts.on("-b", "--boot", "will runs actions along with updating facts.") do |v|
-        bootmode=false
+        bootmode=true
     end
 
     opts.on("-d", "--debug", "Run in debug mode") do |v|
