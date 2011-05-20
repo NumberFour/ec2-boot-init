@@ -29,10 +29,11 @@ rm -rf %{buildroot}
 %{__install} -d -m0755  %{buildroot}/etc/init.d
 %{__install} -d -m0755  %{buildroot}/etc/ec2-boot-init
 %{__install} -d -m0755  %{buildroot}/etc/ec2-boot-init/actions
+%{__install} -d -m0755  %{buildroot}/etc/rc.d/rc.local.d/ 
 %{__install} -m0755 ec2-boot-init.rb %{buildroot}/usr/sbin/ec2-boot-init
 %{__install} -m0644 motd.provisioned %{buildroot}/etc/ec2-boot-init/motd.provisioned
 %{__install} -m0644 motd.unprovisioned %{buildroot}/etc/ec2-boot-init/motd.unprovisioned
-
+%{__install} -m0755 ec2-boot-init %{buildroot}/etc/rc.d/rc.local.d/ec2-boot-init
 
 cp -R lib/* %{buildroot}/%{ruby_sitelib}/
 cp -R actions/* %{buildroot}/etc/ec2-boot-init/actions/
@@ -45,14 +46,18 @@ cp /etc/ec2-boot-init/motd.unprovisioned /etc/motd
 
 %files
 %doc COPYING
+/etc/rc.d/rc.local.d/ec2-boot-init
 /usr/sbin/ec2-boot-init
 /etc/ec2-boot-init
 %{ruby_sitelib}/ec2boot.rb
 %{ruby_sitelib}/ec2boot
 
 %changelog
+* Fri May 20 2011 Romain Pelisse <romain.pelisse@numberfour.eu> - %{version}-%{rpm_release}%{?dist}  
+- adds script to run ec2-boot-init in /etc/rc.d/rc.local.d/ (moves out of weltenmeister project) 
+
 * Thu May 19 2011 Romain Pelisse <romain.pelisse@numberfour.eu> - %{version}-%{rpm_release}%{?dist}
-- fixes in tmp files handling 
+- fixes in tmp files handling
 
 * Thu May 19 2011 Romain Pelisse <romain.pelisse@numberfour.eu> - %{version}-%{rpm_release}%{?dist}
 - makes update mode default and boot mode triggered by the --boot option

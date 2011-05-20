@@ -1,0 +1,10 @@
+# !/bin/sh
+readonly boot_lock_file="/etc/ec2-boot-init.boot"
+
+if [ -e ${boot_lock_file} ]; then 
+    ec2-boot-init
+else
+    ec2-boot-init --boot
+    touch ${boot_lock_file}
+    chattr -i ${boot_lock_file}
+fi
