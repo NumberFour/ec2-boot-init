@@ -67,7 +67,7 @@ module EC2Boot
             File.open(config.motd_file, "w") do |motd|
                 templ.each do |line|
                     if md.fetched?
-                        [ "ami_id", "instance_type" , "placement_availability_zone", "hostname" , "public_hostname", "instance_id" ].each do |key|
+                        [ "ami_id", "instance_type" , "placement_availability_zone", "instance_id" ].each do |key|
                             line.gsub!(/@@#{key}@@/, md.flat_data["#{key}"]) if md.flat_data.has_key?("#{key}")
                         end
                     end
@@ -119,7 +119,7 @@ module EC2Boot
                     data = md.flat_data
 
                     data.keys.sort.each do |k|
-                        facts.puts("ec2_#{k}=#{data[k]}")
+                        facts.puts("# ec2_#{k}=#{data[k]}")
                     end
                 else
                     log "data not fetched"
@@ -127,7 +127,7 @@ module EC2Boot
 
                 if data.include?("placement_availability_zone")
                     log "update region data"
-                    facts.puts("ec2_placement_region=" + data["placement_availability_zone"].chop)
+                    facts.puts("# ec2_placement_region=" + data["placement_availability_zone"].chop)
                 end
             end
         end
