@@ -13,6 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: ruby
 Packager: R.I.Pienaar <rip@devco.net>
 BuildArch: noarch
+BuildRequires: redhat-lsb
 
 %description
 Bootstrap system for EC2 based systems.
