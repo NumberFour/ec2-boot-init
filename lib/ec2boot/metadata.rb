@@ -13,7 +13,7 @@ module EC2Boot
             super(config)
 
             FileUtils.mkdir_p(@config.cache_dir + "/meta-data")
-            
+
             if !metadata
                 log "Will fetch metadata"
                 fetch
