@@ -70,7 +70,7 @@ task :rpm => [:clean, :doc, :package] do
     lsbdistro = `lsb_release -i -s`.chomp
 
     case lsbdistro
-        when 'CentOS'
+        when /CentOS|Scientific/
             rpmdist = ".el#{lsbdistrel}"
         else
             rpmdist = ""
