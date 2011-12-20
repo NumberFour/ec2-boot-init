@@ -41,6 +41,7 @@ module EC2Boot
             cache_root = @config.cache_dir + "/meta-data/" + root
 
             keys = {}
+            ignores = [ "metrics" ]
 
             tree_root = Util.get_url(tree_url).split("\n")
 
@@ -48,6 +49,11 @@ module EC2Boot
                 if branch =~ /\/$/
                     # its a sub dir
                     keyname = branch.chop
+
+                    if ignores.include? keyname
+                        log "Ignore #{keyname}"
+                        next
+                    end
 
                     FileUtils.mkdir_p(cache_root + "/" + branch)
                     keys[keyname] = get_tree(root + "/" + branch)
